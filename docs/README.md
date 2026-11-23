@@ -1,7 +1,67 @@
 # Course reading pages
 
+## Weeks 8–10
+
+- [Lecture 08: InstructGPT, SFT and reward models](lecture-08-instructgpt.html).
+- [Lecture 09: REINFORCE, PPO, and the GRPO/DPO supplement](lecture-09-policy-optimization.html).
+- [Lecture 10: Data preparation, evaluation and experimental design](lecture-10-data-evaluation.html).
+
+The November 11 instructor update confirms that GRPO and DPO, alongside the
+SFT/RM/PPO foundations, have been covered across Lectures 8–10. Their examples
+remain collected in the Lecture 09 supplement for review. Rebuild these English
+notes after editing the matching Markdown with
+`node scripts/build-lecture-notes.mjs`. Equations and styles are hosted locally.
+
+## Remaining six lectures
+
+The [current course plan](course-revision.html) builds on the completed
+post-training sequence and Lecture 10's data/evaluation materials. It provides
+the released [Lecture 11 slides](../slides/lecture-11/) on diffusion models and
+diffusion language models, from image denoising to Mercury, LLaDA and Dream.
+It also provides timed preparation routes for Lectures 12–16: retrieval,
+inference and test-time compute, agents, a masked-diffusion follow-up, and
+project synthesis. These future routes include readings, proposed classroom
+exercises, expected evidence and a CPU fallback; their decks and notebooks
+still need preparation and verification. Edit
+[the Markdown source](course-revision.md); the same builder generates its HTML.
+
+## Other course readings
+
+The [Lecture 07 board notes](lecture-07-scaling-laws/README.md) provide a
+standalone 90-minute lesson on Kaplan, Chinchilla, and Porian. The LaTeX source
+includes a step-by-step allocation derivation, original vector figures,
+worked examples, discussion answers, and an independent prediction check.
+
+The [individual project catalog](project-candidates.html) puts student-proposed
+projects first, followed by 48 suggested projects for the October 10 Lecture 05
+release. A left contents panel links the seven guidance sections and nine topic
+groups; it becomes a collapsible menu on narrow screens. The 48 candidates
+support search and filters by category, topic, and resources.
+Each candidate includes suggested readings, prerequisites, a question,
+baseline, evaluation, minimum outcome, and fallback. Compute badges distinguish
+CPU studies, one-GPU plans, and optional two-GPU plans. The compute guide also
+flags larger requirements as a poor fit for the shared pool. GPU memory is
+listed per device; total GPU-hours include every device and run.
+Students may use resources obtained outside the course pool. Every project
+requires practical or experimental work; survey-only projects are not allowed.
+The page prioritizes proposal preparation and resource choices; comparisons
+with other universities are retained in the maintenance notes. See the
+[editable data](project-candidates.json) and
+[maintenance notes](project-candidates-maintenance.md) for review status,
+source checks, upstream contribution routes, and rebuilding instructions.
+
+The [NanoGPT training speed record](nanogpt-training-speed-record.md) preserves
+the September 2026 result of reaching a fixed validation-loss target in
+39.9 seconds on eight H100 GPUs, with sources, hardware, and timing context
+for classroom discussion.
+
 The [MiMo RL archive guide](mimo-rl-archive.md) documents the public training
 history preserved for the post-training lectures and how to retrieve it.
+
+The [RL reading guide for LLM post-training and agents](rl-posttraining-and-agents.md)
+collects Lambert's book, course, and source repository, the MARL textbook,
+and an agentic-RL survey. It includes a suggested reading path and discussion
+prompts for the post-training and agent lectures.
 
 The [Lecture 01 reader](lecture-01-pre-tokenization.html) explains text
 preprocessing before tokenization. Its English and Chinese versions share

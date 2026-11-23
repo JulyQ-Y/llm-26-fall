@@ -6,6 +6,14 @@ must be verified first. Numbers marked *measured* come from tests run on the
 course cluster on September 11; numbers marked *assumed* or *estimated* are
 stated assumptions to be replaced by measurements.
 
+**Schedule note, November 11:** the week assignments below are historical
+preparation targets, not a record of completed cluster runs. The
+[current teaching plan](course-revision.html) records SFT/RM/PPO and DPO/GRPO
+as covered across Lectures 8–10, retains the data/evaluation materials in
+Lecture 10, and adds efficient adaptation and distillation in Lecture 11.
+Use that plan for lecture dates; the September measurements here have not
+been rerun.
+
 ## 1. Target in one sentence
 
 Train a **1B-parameter decoder** on **about 35B tokens** of English, Chinese,
@@ -78,7 +86,7 @@ light pass (Section 4) so students see the pipeline, not to improve on it.
 
 Mixture: English 40%, Chinese 29%, code 11%, math 11%, reference 9%. The
 Chinese share is deliberately high for a Fudan class and is the main lever
-students can vary in the Week 7 data-policy ablation.
+students can vary in the Week 8 data-policy ablation.
 
 Sizes: 35B tokens is about 140 GB of text and 140 GB tokenized as uint32
 (uint16 cannot hold the 151,669-entry Qwen vocabulary), well inside the 3 TB
@@ -100,7 +108,7 @@ smaller vocabulary would also cut the output-layer cost noted in Section 2.
 2. **Filter**: the C4/Gopher line and document rules, the language ID check,
    and the PII regexes (Weeks 2–4 regex tasks are exactly these functions).
 3. **Deduplicate**: exact hashes per document, then MinHash near-duplicates
-   within each source (Week 7, data lecture).
+   within each source (Week 8, data lecture).
 4. **Decontaminate**: 10-gram overlap against every benchmark we will report
    (DeepSeekMath's rule), before tokenization.
 5. **Tokenize and pack** into fixed 2048-token sequences with document
@@ -123,8 +131,8 @@ remains a preparation target, subject to the checks in Section 7.
 | 2–4 | N-grams, embeddings, attention | finish the measurements in Section 6; download sources; tokenizer counts | regex and tokenizer tasks |
 | 5 | Transformer (October 10 make-up class) | dedup, decontaminate, tokenize; train the 30M and 125M proxies on the full mixture | shape checks on the decoder |
 | 6 | Pretraining and decoding | **launch the 1B flagship** (about one day on 32 cards); publish the training curve live | resumed-run and failure-diagnosis exercises on the 125M |
-| 7 | Data preparation | 125M ablations: two data policies (Chinese share, with/without Cosmopedia) at equal token budget | compare the two policies |
-| 8 | Compute and scaling | fit the 30M–350M ladder; predict the 1B loss, then compare with the real run; dense versus MoE at equal data (Section 6) | resource estimate versus measured value |
+| 7 | Compute and scaling | fit the 30M–350M ladder; predict the 1B loss, then compare with the real run; dense versus MoE at equal data (Section 6) | resource estimate versus measured value |
+| 8 | Data preparation | 125M ablations: two data policies (Chinese share, with/without Cosmopedia) at equal token budget | compare the two policies |
 | 9 | Evaluation | evaluate the 1B against Qwen3-0.6B-Base, SmolLM2, GPT-2 XL; contamination audit | audit one benchmark item |
 | 10–11 | SFT, preferences | SFT and a DPO pass on the 1B with open instruction data | before/after on one prompt set |
 | 12–16 | RAG, inference, diffusion, agents, synthesis | serve the model (vllm is installed on the PPU image); latency tables | projects use the checkpoints |

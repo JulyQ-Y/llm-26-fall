@@ -48,24 +48,44 @@ Weeks follow the university academic calendar: they run Sunday through Saturday,
 | 1 | Wed, Sep 9, 2026 | Introduction and tokenization | First class |
 | 2 | Wed, Sep 16, 2026 | N-gram language models | A1 released |
 | 3 | Wed, Sep 23, 2026 | Embeddings and PyTorch for language models | Quiz 1 |
-| 4 | Wed, Sep 30, 2026 | Neural language models and attention | A1 due |
-| 5 | **Sat, Oct 10, 2026** | **The Transformer as a working model** | **Make-up class**; Quiz 2; A2 released |
-| 6 | Wed, Oct 14, 2026 | Pretraining and decoding in practice | Project proposal due |
-| 7 | Wed, Oct 21, 2026 | Data preparation and quality | Quiz 3 |
-| 8 | Wed, Oct 28, 2026 | Compute budgets and scaling | A2 due **Sat, Oct 31** |
-| 9 | Wed, Nov 4, 2026 | Evaluation and experimental design | — |
-| 10 | Wed, Nov 11, 2026 | Supervised fine-tuning | Quiz 4; A3 released |
-| 11 | Wed, Nov 18, 2026 | Preferences, rewards, and alignment | — |
-| 12 | Wed, Nov 25, 2026 | Retrieval and retrieval-augmented generation | Project progress update due |
-| 13 | Wed, Dec 2, 2026 | Efficient inference | A3 due |
-| 14 | Wed, Dec 9, 2026 | Diffusion language models | Quiz 5 |
-| 15 | Wed, Dec 16, 2026 | Agents and tool use | — |
-| 16 | Wed, Dec 23, 2026 | Research synthesis and project revision | Last class |
+| 4 | Wed, Sep 30, 2026 | Neural LMs and Recurrent Attention | A1 due |
+| 5 | **Sat, Oct 10, 2026** | **Attention and the Transformer** | **Make-up class**; Quiz 2; [A2 released](../assignments/a2-build-a-small-lm/README.md); [candidate projects](project-candidates.html) |
+| 6 | Wed, Oct 14, 2026 | Pretraining and decoding in practice | — |
+| 7 | Wed, Oct 21, 2026 | Compute budgets and scaling; guest talk by Jiaxuan Zou | Quiz 3; Project proposal due |
+| 8 | Wed, Oct 28, 2026 | [InstructGPT, SFT and reward models](lecture-08-instructgpt.html) | A2 due **Sat, Oct 31** |
+| 9 | Wed, Nov 4, 2026 | [Reinforcement learning, REINFORCE and PPO](lecture-09-policy-optimization.html) | — |
+| 10 | Wed, Nov 11, 2026 | [Data preparation, evaluation and experimental design](lecture-10-data-evaluation.html) | Quiz 4; [A3 release Friday, Nov 13](../assignments/a3-sft-rm-ppo/README.md) |
+| 11 | Wed, Nov 18, 2026 | [Diffusion models and diffusion language models](../slides/lecture-11/) | — |
+| 12 | Wed, Nov 25, 2026 | [Retrieval and retrieval-augmented generation](course-revision.html#lecture-12-retrieval-and-rag) | Project progress update due |
+| 13 | Wed, Dec 2, 2026 | [Efficient inference and computation at test time](course-revision.html#lecture-13-inference-and-computation-at-test-time) | A3 due Friday, Dec 4 |
+| 14 | Wed, Dec 9, 2026 | [Agents and tool use](course-revision.html#lecture-14-agents-and-tool-use) | Quiz 5 |
+| 15 | Wed, Dec 16, 2026 | [Masked diffusion language models](course-revision.html#lecture-15-masked-diffusion-language-models) | — |
+| 16 | Wed, Dec 23, 2026 | [Research synthesis and project revision](course-revision.html#lecture-16-research-synthesis-and-project-revision) | Last class |
 
 - October 7 falls on the National Day holiday. Its meeting moves to Saturday,
   October 10; time and room follow the university make-up-day notice.
 - There are 16 meetings of three 45-minute periods: 48 academic periods,
   matching the registered allocation. Lecture numbers follow these meetings.
+- Lecture 07 covered compute budgets and scaling to align with
+  [Jiaxuan Zou's](https://jiaxuanzou0714.github.io/) guest session on
+  **October 21, 15:25–16:10 (Asia/Shanghai), period 8**, in HGX103.
+  The topic is [How to Build a Scientific Scaling Ladder](https://jiaxuanzou0714.github.io/blog/2026/how-to-build-scientific-scaling-ladder/).
+  The first two periods introduce compute budgets and scaling laws, with
+  the existing 15-minute Quiz 3 slot in the first period. Quiz 3, the project
+  proposal deadline, and the A2 deadline retain their published dates.
+- **November 11 update:** The instructor confirms that the post-training
+  sequence across Lectures 8–10 includes InstructGPT, SFT, reward models,
+  REINFORCE/PPO, GRPO and DPO. The Lecture 09 supplement now serves as review;
+  Lecture 10's data/evaluation materials remain the experiment-protocol
+  reference. Assignment dates, published quiz scope and weights are unchanged.
+- **November 18 update:** Lecture 11 covers diffusion models and diffusion
+  language models, with its slide deck linked above. It introduces forward
+  noising, learned denoising, training and sampling, then Mercury, LLaDA and
+  Dream. This replaces the earlier adaptation/distillation plan for Lecture 11.
+- Lectures 12–16 retain preparation plans. Lectures 12–13 develop retrieval
+  and inference/test-time compute. Agents remain in Lecture 14, followed by
+  the planned masked-diffusion follow-up in Lecture 15. Quiz 5 stays on December 9 and covers
+  previously taught core material, not the new agent lesson.
 - December 23 includes guided revision of project claims and evidence.
   Project checkpoints remain individual written submissions through eLearning.
 - Weeks 17–18 (Dec 27, 2026 – Jan 9, 2027) are exam weeks with no classes.
@@ -88,16 +108,25 @@ have the same requirements, points, and deadlines.
 | Quiz 4 | November 11 | In class |
 | Quiz 5 | December 9 | In class |
 | A1: Tokenization and language models | September 16 | September 30 |
-| A2: Build a small LM | October 10 | October 31 |
-| A3: Adapt and evaluate | November 11 | December 2 |
-| Project proposal | Project introduced September 9 | October 14 |
+| [A2: Build and investigate a small language model](../assignments/a2-build-a-small-lm/README.md) | October 10 | October 31, 23:59 (Asia/Shanghai) |
+| [A3: SFT, Reward Modeling, and PPO](../assignments/a3-sft-rm-ppo/README.md) | November 13 | Friday, December 4 |
+| Project proposal | Project introduced September 9 | October 21 |
 | Project progress update | Follows proposal feedback | November 25 |
 | Final report, code, and experiment record | Builds on project checkpoints | December 30 |
 
-The [September 29 review proposal](schedule-adjustment-proposal.md) compares
-these dates with the previous schedule and explains the three-week assignment
-windows. Assessment weights are quizzes 10%, assignments 45%, and the
-individual project 45%.
+The A3 release package is dated November 13, following the instructor's
+November 13 confirmation; its original scheduled release was November 11.
+The instructor extended the deadline from December 2 to **Friday, December 4,
+2026, 23:59 Asia/Shanghai**, preserving the 21-day work window. The 15% course
+weight is unchanged. A3 uses the same late-submission policy as A2, measured
+from the new deadline; see the handout for the exact rule.
+
+The [September 29 review proposal](schedule-adjustment-proposal.md) records
+the schedule adjustment and explains the three-week assignment windows.
+On October 9, the instructor extended the project proposal deadline to
+October 21 to give students more time to consider their project questions.
+Assessment weights are quizzes 10%, assignments 45%, and the individual
+project 45%.
 
 ## Sources
 

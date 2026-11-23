@@ -12,8 +12,10 @@ student IDs, and grades private; submit through eLearning.
 | Assignment | Released | Due (Asia/Shanghai) | Course weight | Announcements |
 | --- | --- | --- | ---: | --- |
 | [A1 · Tokenization and language models](a1-tokenization-and-language-models/README.md) | September 16, 2026 | September 30, 2026, 23:59 | 15% | [#140](https://github.com/baojian/llm-26-fall/issues/140) |
+| [A2 · Build and investigate a small language model](a2-build-a-small-lm/README.md) | October 10, 2026 | October 31, 2026, 23:59 | 15% | [Handout and submission details](a2-build-a-small-lm/README.md) |
+| [A3 · SFT, Reward Modeling, and PPO](a3-sft-rm-ppo/README.md) | November 13, 2026 | December 4, 2026, 23:59 | 15% | [Handout and submission details](a3-sft-rm-ppo/README.md) |
 
-For A1, copy the assignment folder into your ignored `workspace/` directory
+Copy the assignment folder into your ignored `workspace/` directory
 before editing, or work in a separate local copy. Run the supplied packager to
 create the submission ZIP. Assignment solutions and results must not be
 committed or submitted as public pull requests. Each handout states its late

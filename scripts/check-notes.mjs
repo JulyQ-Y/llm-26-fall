@@ -161,9 +161,125 @@ try {
   assert.equal(await page.locator('.reading-article:visible').getAttribute('data-note-language'), 'zh');
   await page.locator('#tab-learning').click();
   assert.equal(await page.locator('#panel-learning-zh').isVisible(), true);
+  // Use real reset-button clicks: calling form.reset() from evaluate() misses
+  // the browser's event/default-action ordering that previously hid cards.
+  await page.goto(origin + '/docs/project-candidates.html');
+  await page.locator('.lang-toggle [data-lang="en"]').click();
+  const projectCards = page.locator('#project-list .project-card:visible');
+  assert.equal(await projectCards.count(), 48);
+  for (const [selector, value] of [
+    ['#project-category', 'Research problem'],
+    ['#project-topic', 'Retrieval and evidence'],
+    ['#project-compute', 'CPU'],
+  ]) {
+    await page.locator(selector).selectOption(value);
+    assert.ok(await projectCards.count() < 48);
+    await page.locator('#catalog-filters button[type="reset"]').click();
+    await page.waitForFunction(() => document.querySelector('#result-count').textContent === '48 of 48 projects');
+    assert.equal(await projectCards.count(), 48, 'Reset restores the complete candidate list.');
+  }
+  await page.locator('#project-search').fill('no-such-project-xyz');
+  assert.equal(await projectCards.count(), 0);
+  assert.equal(await page.locator('#no-results').isVisible(), true);
+  await page.locator('#catalog-filters button[type="reset"]').click();
+  await page.waitForFunction(() => document.querySelector('#result-count').textContent === '48 of 48 projects');
+  assert.equal(await projectCards.count(), 48, 'Reset recovers from an empty search.');
+  assert.equal(await page.locator('#no-results').isVisible(), false);
+  assert.equal(await page.locator('#expand-projects').isDisabled(), false);
+  const topicLinks = page.locator('.toc-topics a');
+  for (let i = 0; i < await topicLinks.count(); i++) {
+    const link = topicLinks.nth(i);
+    const href = await link.getAttribute('href');
+    const topicName = await page.locator(href).getAttribute('data-topic');
+    for (let repeat = 0; repeat < 2; repeat++) {
+      await page.locator('#project-search').fill('no-such-project-xyz');
+      await link.click();
+      await page.waitForFunction(topic => document.querySelector('#project-topic').value === topic && document.querySelector('#project-search').value === '', topicName);
+      assert.deepEqual(await projectCards.evaluateAll(cards => [...new Set(cards.map(card => card.dataset.topic))]), [topicName]);
+    }
+  }
+  await page.locator('.catalog-sidebar a[href="#catalog"]').click();
+  await page.waitForFunction(() => document.querySelector('#result-count').textContent === '48 of 48 projects');
+  assert.equal(await projectCards.count(), 48);
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({ path: path.join(output, 'project-catalog-desktop.png') });
+  // Lecture notes and the remaining course plan keep English text with bilingual navigation.
+  for (const slug of ['lecture-08-instructgpt', 'lecture-09-policy-optimization', 'lecture-10-data-evaluation', 'course-revision']) {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${origin}/docs/${slug}.html?lang=en`, { waitUntil: 'networkidle' });
+    assert.equal(await page.locator('article').getAttribute('lang'), 'en');
+    if (slug !== 'course-revision') assert.ok(await page.locator('article .katex').count() > 0);
+    assert.equal(await page.locator('.katex-error').count(), 0);
+    const links = await page.locator('a[href]').evaluateAll(items => items.map(item => item.href));
+    for (const href of new Set(links)) {
+      const url = new URL(href);
+      if (url.origin !== origin) continue;
+      assert.ok((await context.request.get(href)).ok(), `Missing note link: ${href}`);
+      if (url.hash && url.pathname === new URL(page.url()).pathname) {
+        assert.equal(await page.evaluate(id => Boolean(document.getElementById(id)), decodeURIComponent(url.hash.slice(1))), true, `Missing section: ${href}`);
+      }
+    }
+    await page.screenshot({ path: path.join(output, `${slug}-desktop.png`) });
+    if (slug === 'course-revision') {
+      await page.locator('#lecture-13-inference-and-computation-at-test-time').scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(output, `${slug}-lecture-13.png`) });
+    } else {
+      await page.locator('.katex-display').nth(1).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(output, `${slug}-equations.png`) });
+    }
+    await page.locator('.lang-toggle [data-lang="zh"]').click();
+    assert.equal(await page.locator('header a').first().textContent(), '课程主页');
+    assert.match(await page.locator('.language-availability').textContent(), /正文目前为英文/);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.evaluate(() => scrollTo(0, 0));
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${slug}: mobile page overflow`);
+    await page.screenshot({ path: path.join(output, `${slug}-mobile.png`) });
+    await page.emulateMedia({ media: 'print' });
+    assert.equal(await page.locator('header').isVisible(), false);
+    assert.equal(await page.locator('article').isVisible(), true);
+    await page.emulateMedia({ media: 'screen' });
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`${origin}/index.html?lang=zh`, { waitUntil: 'networkidle' });
+  assert.match(await page.locator('#lecture-08').textContent(), /奖励模型/);
+  assert.match(await page.locator('#lecture-09').textContent(), /复习第 8–10 讲已涵盖的内容/);
+  assert.match(await page.locator('#lecture-10').textContent(), /实验设计/);
+  for (const number of ['08', '09', '10']) {
+    await page.locator(`#lecture-${number}`).screenshot({ path: path.join(output, `course-week-${number}-zh.png`) });
+  }
+  for (const language of ['en', 'zh']) {
+    await page.goto(`${origin}/index.html?lang=${language}`, { waitUntil: 'networkidle' });
+    const releasedRow = page.locator('#lecture-11');
+    const releasedTitle = await releasedRow.locator('td').nth(2).locator('strong').textContent();
+    assert.match(releasedTitle, language === 'en' ? /diffusion models.*diffusion language models/i : /扩散模型.*扩散语言模型/);
+    assert.doesNotMatch(await releasedRow.textContent(), /LoRA|QLoRA|distillation|蒸馏|To be updated|待更新/);
+    const slides = releasedRow.locator('a[data-local-path="/slides/lecture-11/"]');
+    assert.equal(await slides.count(), 1, 'Lecture 11 links to its published slides.');
+    await releasedRow.screenshot({ path: path.join(output, `course-week-11-${language}.png`) });
+    const [deck] = await Promise.all([context.waitForEvent('page'), slides.click()]);
+    deck.on('pageerror', error => errors.push(error.message));
+    await deck.waitForLoadState('networkidle');
+    await deck.evaluate(() => window.courseReady);
+    assert.equal(await deck.locator('#course-error').isVisible(), false);
+    assert.equal(await deck.evaluate(() => Reveal.getTotalSlides()), 69);
+    await deck.close();
+    for (const number of ['12', '13', '14', '15', '16']) {
+      await page.goto(`${origin}/index.html?lang=${language}`, { waitUntil: 'networkidle' });
+      const row = page.locator(`#lecture-${number}`);
+      const plan = row.locator('a[href^="docs/course-revision.html#"]');
+      assert.equal(await plan.count(), 1);
+      assert.match(await plan.textContent(), language === 'en' ? /preparation plan/ : /备课计划/);
+      assert.doesNotMatch(await row.textContent(), /To be updated|待更新/);
+      await row.screenshot({ path: path.join(output, `course-week-${number}-${language}.png`) });
+      await plan.click();
+      await page.waitForURL('**/docs/course-revision.html*');
+      assert.equal(await page.evaluate(() => Boolean(document.getElementById(decodeURIComponent(location.hash.slice(1))))), true, `Missing plan section for Lecture ${number}`);
+    }
+  }
   assert.deepEqual(errors, [], 'Browser errors or external runtime dependencies.');
-  console.log('Passed bilingual articles, six accessible diagrams, tabs, copying, anchors, mobile layout, print, offline viewing, and shared language controls.');
+  console.log('Passed bilingual articles, six accessible diagrams, tabs, copying, anchors, mobile layout, print, offline viewing, shared language controls, and project catalog filter/reset/topic navigation.');
   console.log('Review images: slides/.checks/notes/');
+  console.log('Passed Week 8–10 notes, Lecture 11 slide navigation, remaining-course plans, equations, local links, mobile layouts, print and bilingual course rows.');
 } finally {
   await browser?.close();
   await new Promise(resolve => server.close(resolve));
